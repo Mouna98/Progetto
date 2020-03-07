@@ -9,6 +9,7 @@ int main() {
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "unit_test/lib/GameCharacter.h"
+#include "unit_test/Animation.h"
 
 
 int main() {
@@ -23,8 +24,17 @@ int main() {
 
    GameCharacter myGameCharacter("GameCharacter.png");
 
+    auto pTexture;
+    Animation animation(&pTexture, sf::Vector2u(1, 6), 0.3f );
+
+   float deltaTime= 0.0f;
+   sf::Clock clock;
+
+
     //Main Loop:
     while(window.isOpen()){
+
+        deltaTime = clock.restart().asSeconds();
 
         sf::Event Event;
 
@@ -49,6 +59,10 @@ int main() {
             }
 
         }
+
+        animation.Update(0, deltaTime);
+        //myGameCharacter.setTextureRect(animation.uvRect);
+
         window.clear();
         myGameCharacter.drawGameCharacter(window);
         window.display();

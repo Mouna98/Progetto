@@ -8,7 +8,7 @@ add_subdirectory(unit_test)
 find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 
 set(SOURCE_FILES main.cpp)
-add_executable(Progetto ${SOURCE_FILES})
+add_executable(Progetto ${SOURCE_FILES} unit_test/Animation.cpp unit_test/Animation.h)
 add_library(core ${SOURCE_FILES})
 target_link_libraries(Progetto sfml-graphics sfml-audio)
 target_link_libraries(core sfml-graphics sfml-audio)

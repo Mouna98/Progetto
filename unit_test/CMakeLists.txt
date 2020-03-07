@@ -5,6 +5,6 @@ add_subdirectory(./lib/googletest)
 set(gtest_SOURCE_DIR ./lib/googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ../)
 
-set(TEST_SOURCE_FILES runAllTests.cpp lib/GameCharacter.cpp lib/GameCharacter.h)
-add_executable(runAllTests ${TEST_SOURCE_FILES})
+set(TEST_SOURCE_FILES runAllTests.cpp lib/GameCharacter.cpp lib/GameCharacter.h Animation.cpp Animation.h)
+add_executable(runAllTests ${TEST_SOURCE_FILES} Animation.cpp Animation.h)
 target_link_libraries(runAllTests gtest gtest_main core)
