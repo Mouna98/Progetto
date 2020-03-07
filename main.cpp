@@ -7,33 +7,51 @@ int main() {
 }*/
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include "unit_test/lib/GameCharacter.h"
 
 
 int main() {
+    sf::RenderWindow window;
 
-    sf::RenderWindow window(sf::VideoMode(640,480,32),"Hello SFML");
+    sf::Vector2i centerWindow((sf::VideoMode::getDesktopMode().width/2)-755, (sf::VideoMode::getDesktopMode().height/2)-390);
 
-    sf::Font font;
-    font.loadFromFile("OpenSans-Bold.ttf");
+    window.create(sf::VideoMode(1500, 700), "SFML", sf::Style::Titlebar | sf::Style::Close);
+    window.setPosition(centerWindow);
 
-    sf::Text text("Hello World",font,11);
-    text.setCharacterSize(32);
-    text.setPosition(window.getSize().x/2 - text.getGlobalBounds().width/2,
-                     window.getSize().y/2 - text.getGlobalBounds().height/2);
+    window.setKeyRepeatEnabled(true);
 
+   GameCharacter myGameCharacter("GameCharacter.png");
 
+    //Main Loop:
     while(window.isOpen()){
 
-        sf::Event event;
-        while(window.pollEvent(event)) {
-            if(event.type == sf::Event::Closed){
-                window.close();
+        sf::Event Event;
+
+        //Event Loop:
+        while(window.pollEvent(Event)){
+            switch(Event.type){
+
+                case sf::Event::Closed:
+                    window.close();
+                default:
+                    break;
             }
 
-            window.clear(sf::Color::Black);
-            window.draw(text);
-            window.display();
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+                myGameCharacter.moveGameCharacter('u', 6.0);
+            }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+                myGameCharacter.moveGameCharacter('d', 6.0);
+            }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+                myGameCharacter.moveGameCharacter('l', 6.0);
+            }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+                myGameCharacter.moveGameCharacter('r', 6.0);
+            }
+
         }
+        window.clear();
+        myGameCharacter.drawGameCharacter(window);
+        window.display();
     }
-    return 0;
 }
+
