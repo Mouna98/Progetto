@@ -1,71 +1,49 @@
 #include <iostream>
-
-/*
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-}*/
-
 #include <SFML/Graphics.hpp>
-#include <iostream>
-#include "unit_test/lib/GameCharacter.h"
-#include "unit_test/Animation.h"
+#include "Animation.h"
 
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(1024, 1024), "Progetto", sf::Style::Close | sf::Style::Titlebar);
 
-int main() {
-    sf::RenderWindow window;
+    sf::Texture pTexture;
+    pTexture.loadFromFile("Files/GameCharacterIdle.png");
 
-    sf::Vector2i centerWindow((sf::VideoMode::getDesktopMode().width/2)-755, (sf::VideoMode::getDesktopMode().height/2)-390);
+    sf::IntRect rectSourceSprite(0, 0, 128, 128);
+    sf::Sprite sprite(pTexture, rectSourceSprite);
 
-    window.create(sf::VideoMode(1500, 700), "SFML", sf::Style::Titlebar | sf::Style::Close);
-    window.setPosition(centerWindow);
+    sf::Clock clock;
 
-    window.setKeyRepeatEnabled(true);
-
-   GameCharacter myGameCharacter("GameCharacter.png");
-
-    auto pTexture;
-    Animation animation(&pTexture, sf::Vector2u(1, 6), 0.3f );
-
-   float deltaTime= 0.0f;
-   sf::Clock clock;
-
-
-    //Main Loop:
-    while(window.isOpen()){
-
-        deltaTime = clock.restart().asSeconds();
+    while (window.isOpen())
+    {
 
         sf::Event Event;
-
-        //Event Loop:
-        while(window.pollEvent(Event)){
-            switch(Event.type){
-
+        while (window.pollEvent(Event))
+        {
+            switch (Event.type)
+            {
                 case sf::Event::Closed:
                     window.close();
-                default:
                     break;
             }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-                myGameCharacter.moveGameCharacter('u', 6.0);
-            }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
-                myGameCharacter.moveGameCharacter('d', 6.0);
-            }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
-                myGameCharacter.moveGameCharacter('l', 6.0);
-            }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
-                myGameCharacter.moveGameCharacter('r', 6.0);
-            }
-
         }
 
-        animation.Update(0, deltaTime);
-        //myGameCharacter.setTextureRect(animation.uvRect);
+        if (clock.getElapsedTime().asSeconds() > 0.2)
+        {
+            if (rectSourceSprite.left == 1664)
+                rectSourceSprite.left = 0;
+            else
+                rectSourceSprite.left += 128;
+
+            sprite.setTextureRect(rectSourceSprite);
+            clock.restart();
+        }
 
         window.clear();
-        myGameCharacter.drawGameCharacter(window);
+        window.draw(sprite);
         window.display();
     }
+
+    return 0;
 }
 
