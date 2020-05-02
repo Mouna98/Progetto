@@ -7,25 +7,46 @@
 
 
 #include <SFML/Graphics.hpp>
-#include "Struttura.h"
+#include "SpriteParameters.h"
+#include "gameValues.h"
+#include "AnimationManager.h"
 
 class Entity
 {
 public:
-    Entity() {};
+    Entity(const float& posX, const float& posY);
     ~Entity() {};
 
-    virtual const Parameters* getParameters() const
-    {
-        return &parameters;
-    };
+    void setUpAnimations(const SpriteParameters *parameters);
+
+    void animate();
+
+    void setState(EntityState state) {
+        Entity::state = state;
+    }
+
+    const SpriteParameters* getParameters() const {
+        return &entityParameters;
+    }
+
+    const sf::Sprite& getSprite() const {
+        return sprite;
+    }
 
 private:
-    static const Parameters parameters;
+    void loadTexture(const std::string& stringPath);
 
-public:
-    int posX = 0;
-    int posY = 0;
+    void initializeSprite(const float& posX, const float& posY);
+
+private:
+    sf::Texture texture;
+    sf::Sprite sprite;
+
+    EntityState state;
+
+    static const SpriteParameters entityParameters;
+
+    AnimationManager animationManager;
 };
 
 #endif //PROGETTO_ENTITY_H

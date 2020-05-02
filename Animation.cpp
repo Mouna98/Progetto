@@ -4,36 +4,37 @@
 
 #include "Animation.h"
 
-/* Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime)
+Animation::Animation(std::vector<sf::IntRect>& frames, sf::Sprite* sprite, const SpriteParameters* spriteParam, const float& animationTime) :
+        frames(frames), sprite(sprite), spriteParam(spriteParam), currentFrame(0)
 {
-    this->imageCount = imageCount;
-    this->switchTime = switchTime;
-    totalTime = 0.0f;
-    currentImage.x = 0;
+    frameCounter = -1;
 
-    uvRect.width = texture->getSize().x / float(imageCount.x);
-    uvRect.height = texture->getSize().y / float(imageCount.y);
-}
-
-Animation::~Animation()
-{
-
-}
-
-void Animation::Update(int row, float deltaTime)
-{
-    currentImage.y = row;
-    totalTime += deltaTime;
-
-    if (totalTime >= switchTime) {
-        totalTime -= switchTime;
-        currentImage.x++;
-
-        if (currentImage.x >= imageCount.x) {
-            currentImage.x = 0;
-        }
+    for (const auto &framIterator : frames)
+    {
+        frameCounter++;
     }
 
-    uvRect.left = currentImage.x * uvRect.width;
-    uvRect.top = currentImage.y * uvRect.height;
-} */
+    frameTime = animationTime / frameCounter;
+}
+
+void Animation::play()
+{
+    if (elapsedTime.asSeconds() >= frameTime)
+    {
+        sprite->setTextureRect(frames[currentFrame]);
+        currentFrame++;
+
+        if (currentFrame >= frameCounter)
+            currentFrame = 0;
+    }
+
+    elapsedTime -= sf::seconds(frameTime);
+}
+
+void Animation::checkTime()
+{
+    if (elapsedTime.asSeconds() >= frameTime)
+        elapsedTime -= sf::seconds(frameTime);
+
+    restartClock();
+}

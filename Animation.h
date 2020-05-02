@@ -11,38 +11,33 @@
 class Animation
 {
 public:
-    Animation() {};
-    Animation(sf::Texture texture, int spriteWidth, int spriteHeight, float switchTime, int spriteCounter)
-    {
-        this->spriteCounter = spriteCounter;
-        this->switchTime = switchTime;
-        spriteRect = sf::IntRect(0, 0, spriteWidth, spriteHeight);
-        sprite = sf::Sprite(texture, spriteRect);
-    };
-
+    Animation(std::vector<sf::IntRect>& frames, sf::Sprite* sprite, const SpriteParameters* spriteParam, const float& animationTime = 1.f);
     ~Animation() {};
 
-    void update()
+    void play();
+
+    void setCurrentFrame(int currentframe)
     {
-        sf::Clock clock;
-        if (clock.getElapsedTime().asSeconds() > switchTime)
-        {
-            if (spriteRect.left == spriteCounter * spriteRect.width)
-                spriteRect.left = 0;
-            else
-                spriteRect.left += spriteRect.width;
+        Animation::currentFrame = currentFrame;
+    }
 
-            sprite.setTextureRect(spriteRect);
-        }
-        clock.restart();
-    };
+    void checkTime();
 
-public:
-    float switchTime;
-    int spriteCounter;
+    void restartClock() {
+        elapsedTime += clock.restart();
+    }
 
-    sf::IntRect spriteRect;
-    sf::Sprite sprite;
+private:
+    std::vector<sf::IntRect> frames;
+    sf::Sprite* sprite;
+    const SpriteParameters* spriteParam;
+
+    int currentFrame;
+    int frameCounter;
+
+    sf::Clock clock;
+    sf::Time elapsedTime;
+    float frameTime;
 };
 
 
