@@ -6,47 +6,35 @@
 #define PROGETTO_ENTITY_H
 
 
-#include <SFML/Graphics.hpp>
-#include "SpriteParameters.h"
-#include "gameValues.h"
-#include "AnimationManager.h"
+#include "SFML/Graphics.hpp"
+#include "Animation.h"
+#include "Collider.h"
 
 class Entity
 {
 public:
-    Entity(const float& posX, const float& posY);
+    Entity(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeght);
     ~Entity() {};
 
-    void setUpAnimations(const SpriteParameters *parameters);
+    void update(float deltaTime);
+    void draw(sf::RenderWindow& window);
+    void onCollision(sf::Vector2f direction);
 
-    void animate();
-
-    void setState(EntityState state) {
-        Entity::state = state;
-    }
-
-    const SpriteParameters* getParameters() const {
-        return &entityParameters;
-    }
-
-    const sf::Sprite& getSprite() const {
-        return sprite;
+    Collider getCollider()
+    {
+        return Collider(body);
     }
 
 private:
-    void loadTexture(const std::string& stringPath);
+    sf::RectangleShape body;
+    Animation animation;
+    unsigned int row;
+    float speed;
+    bool faceRight;
 
-    void initializeSprite(const float& posX, const float& posY);
-
-private:
-    sf::Texture texture;
-    sf::Sprite sprite;
-
-    EntityState state;
-
-    static const SpriteParameters entityParameters;
-
-    AnimationManager animationManager;
+    sf::Vector2f velocity;
+    bool canJump;
+    float jumpHeight;
 };
 
 #endif //PROGETTO_ENTITY_H

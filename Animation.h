@@ -5,39 +5,26 @@
 #ifndef PROGETTO_ANIMATION_H
 #define PROGETTO_ANIMATION_H
 
-#include <iostream>
 #include <SFML/Graphics.hpp>
 
 class Animation
 {
 public:
-    Animation(std::vector<sf::IntRect>& frames, sf::Sprite* sprite, const SpriteParameters* spriteParam, const float& animationTime = 1.f);
+    Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime);
     ~Animation() {};
 
-    void play();
+    void update(int row, float deltaTime, bool faceRight);
 
-    void setCurrentFrame(int currentframe)
-    {
-        Animation::currentFrame = currentFrame;
-    }
-
-    void checkTime();
-
-    void restartClock() {
-        elapsedTime += clock.restart();
-    }
+public:
+    sf::IntRect uvRect;
 
 private:
-    std::vector<sf::IntRect> frames;
-    sf::Sprite* sprite;
-    const SpriteParameters* spriteParam;
+    sf::Vector2u imageCount;
+    sf::Vector2u currentImage;
 
-    int currentFrame;
-    int frameCounter;
+    float totalTime;
+    float switchTime;
 
-    sf::Clock clock;
-    sf::Time elapsedTime;
-    float frameTime;
 };
 
 

@@ -4,41 +4,79 @@
 
 #include "Entity.h"
 
-#include "gameValues.h"
-
-const SpriteParameters Entity::entityParameters("Files/Sprites/idle1.png", 128, 128);
-
-Entity::Entity(const float& posX, const float& posY) : animationManager(&sprite, getParameters())
+Entity::Entity(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeght) : animation(texture, imageCount, switchTime)
 {
-    setState(EntityState::IDLE);
-    initializeSprite(posX, posY);
-    setUpAnimations(getParameters());
+    this->speed = speed;
+    this->jumpHeight = jumpHeght;
+    row = 0;
+    faceRight = true;
+
+    body.setSize(sf::Vector2f(128.0f, 128.0f));
+    body.setOrigin(body.getSize() / 2.0f);
+    body.setPosition(206.0f, 206.0f);
+    body.setTexture(texture);
 }
 
-void Entity::setUpAnimations(const SpriteParameters *parameters)
+void Entity::update(float deltaTime)
 {
-    animationManager = AnimationManager(&sprite, parameters);
-    animationManager.createAnimation(EntityState::IDLE);
-}
+    velocity.x = 0.0f;
 
-void Entity::animate()
-{
-    animationManager.play(state);
-}
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        velocity.x -= speed;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        velocity.x += speed;
 
-void Entity::loadTexture(const std::string& stringPath)
-{
-    if (!texture.loadFromFile(stringPath)) {
-        std::cout << "Could not load texture from: " << stringPath << std::endl;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && canJump)
+    {
+        velocity.y = -sqrtf(2.0f * 981.0f * jumpHeight);
     }
 
-    sprite = sf::Sprite(texture);
+    velocity.y += 981.0f * deltaTime;
+
+    if (velocity.x == 0)
+        row = 0;
+    else
+    {
+        row = 1;
+
+        if (velocity.x > 0.0f)
+            faceRight = true;
+        else
+            faceRight = false;
+    }
+
+    animation.update(row, deltaTime, faceRight);
+    body.setTextureRect(animation.uvRect);
+    body.move(velocity * deltaTime);
 }
 
-void Entity::initializeSprite(const float& posX, const float& posY)
+void Entity::draw(sf::RenderWindow& window)
 {
-    loadTexture(getParameters()->path);
-    sprite.setTextureRect(sf::IntRect(0, 1, getParameters()->width, getParameters()->height));
-    sprite.setOrigin(sprite.getTextureRect().width / 2., sprite.getTextureRect().height / 2.);
-    sprite.setPosition(posX, posY);
+    window.draw(body);
+}
+
+void Entity::onCollision(sf::Vector2f direction)
+{
+    if (direction.x < 0.0f)
+    {
+        //collision on the left
+        velocity.x = 0.0f;
+    }
+    else if (direction.x > 0.0f)
+    {
+        //collision on the right
+        velocity.x = 0.0f;
+    }
+
+    if (direction.y < 0.0f)
+    {
+        //collision on the bottom
+        velocity.y = 0.0f;
+        canJump = true;
+    }
+    else if (direction.y > 0.0f)
+    {
+        //collision on the top
+        velocity.y = 0.0f;
+    }
 }
