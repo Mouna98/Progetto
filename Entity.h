@@ -13,7 +13,7 @@
 class Entity
 {
 public:
-    Entity(std::string texturePath, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight);
+    Entity(std::string texturePath, sf::Vector2u imageCount, sf::Vector2f position, float switchTime, float speed, float jumpHeight);
     ~Entity() {};
 
     void update(float deltaTime);

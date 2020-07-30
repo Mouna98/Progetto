@@ -4,7 +4,7 @@
 
 #include "Entity.h"
 
-Entity::Entity(std::string texturePath, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight) : animation(texturePath, imageCount, switchTime)
+Entity::Entity(std::string texturePath, sf::Vector2u imageCount, sf::Vector2f position, float switchTime, float speed, float jumpHeight) : animation(texturePath, imageCount, switchTime)
 {
     this->speed = speed;
     this->jumpHeight = jumpHeight;
@@ -14,7 +14,7 @@ Entity::Entity(std::string texturePath, sf::Vector2u imageCount, float switchTim
     loadTexture(texturePath);
     body.setSize(sf::Vector2f(57.0f, 55.0f));
     body.setOrigin(body.getSize() / 2.0f);
-    body.setPosition(206.0f, 206.0f);
+    body.setPosition(position.x, position.y);
     body.setTexture(&texture);
 }
 

@@ -8,7 +8,7 @@ int main ()
 {
     sf::RenderWindow window(sf::VideoMode(512, 512), "Project", sf::Style::Close | sf::Style::Resize);
 
-    Entity player("Files/Sprites/mage2.png", sf::Vector2u(14, 2), 0.1f, 100.0f, 100);
+    Entity player("Files/Sprites/mage2.png", sf::Vector2u(14, 2), sf::Vector2f(206.0f, 206.0f), 0.1f, 100.0f, 100);
 
     std::vector<Platform> platforms;
     platforms.push_back(Platform(nullptr, sf::Vector2f(1000.0f, 200.f), sf::Vector2f(500.0f, 500.0f)));
