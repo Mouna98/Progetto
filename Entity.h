@@ -13,12 +13,13 @@
 class Entity
 {
 public:
-    Entity(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeght);
+    Entity(std::string texturePath, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight);
     ~Entity() {};
 
     void update(float deltaTime);
     void draw(sf::RenderWindow& window);
     void onCollision(sf::Vector2f direction);
+    void loadTexture(std::string path);
 
     Collider getCollider()
     {
@@ -28,6 +29,7 @@ public:
 private:
     sf::RectangleShape body;
     Animation animation;
+    sf::Texture texture;
     unsigned int row;
     float speed;
     bool faceRight;

@@ -4,17 +4,18 @@
 
 #include "Entity.h"
 
-Entity::Entity(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeght) : animation(texture, imageCount, switchTime)
+Entity::Entity(std::string texturePath, sf::Vector2u imageCount, float switchTime, float speed, float jumpHeight) : animation(texturePath, imageCount, switchTime)
 {
     this->speed = speed;
-    this->jumpHeight = jumpHeght;
+    this->jumpHeight = jumpHeight;
     row = 0;
     faceRight = true;
 
-    body.setSize(sf::Vector2f(128.0f, 128.0f));
+    loadTexture(texturePath);
+    body.setSize(sf::Vector2f(57.0f, 55.0f));
     body.setOrigin(body.getSize() / 2.0f);
     body.setPosition(206.0f, 206.0f);
-    body.setTexture(texture);
+    body.setTexture(&texture);
 }
 
 void Entity::update(float deltaTime)
@@ -79,4 +80,9 @@ void Entity::onCollision(sf::Vector2f direction)
         //collision on the top
         velocity.y = 0.0f;
     }
+}
+
+void Entity::loadTexture(std::string path)
+{
+    texture.loadFromFile(path);
 }

@@ -10,7 +10,7 @@
 class Animation
 {
 public:
-    Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime);
+    Animation(std::string texturePath, sf::Vector2u imageCount, float switchTime);
     ~Animation() {};
 
     void update(int row, float deltaTime, bool faceRight);
